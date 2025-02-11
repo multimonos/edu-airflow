@@ -10,7 +10,6 @@ RUN pip install --no-cache-dir apache-airflow-providers-sqlite
 
 COPY ./docker/profile /home/airflow/.bash_profile
 
-COPY dags/ /dags/
 COPY --chown=airflow:airflow ./docker/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 

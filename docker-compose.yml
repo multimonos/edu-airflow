@@ -7,11 +7,11 @@ services:
     #tty: true # keep container running
     #stdin_open: true # enable interactive shell 
     environment:
-      - AIRFLOW__CORE__LOAD_EXAMPLES=False
+      - AIRFLOW__CORE__LOAD_EXAMPLES=True
       - AIRFLOW__CORE__EXECUTOR=SequentialExecutor
       - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=sqlite:////home/airflow/airflow.db
     volumes:
-      - ./dags:/home/airflow/dags
+      #- ./dags:/home/airflow/dags
       - ./src:/home/airflow/src
     ports:
       - "8080:8080"
