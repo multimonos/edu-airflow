@@ -12,5 +12,6 @@ services:
       - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=sqlite:////home/airflow/airflow.db
     volumes:
       - ./dags:/home/airflow/dags
+      - ./src:/home/airflow/src
     ports:
       - "8080:8080"
