@@ -9,8 +9,8 @@ services:
     environment:
       - AIRFLOW__CORE__LOAD_EXAMPLES=False
       - AIRFLOW__CORE__EXECUTOR=SequentialExecutor
-      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=sqlite:////opt/airflow/airflow.db
+      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=sqlite:////home/airflow/airflow.db
     volumes:
-      - ./dags:/opt/airflow/dags
+      - ./dags:/home/airflow/dags
     ports:
       - "8080:8080"

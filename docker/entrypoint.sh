@@ -16,7 +16,7 @@ echo "starting airflow scheduler ..."
 airflow scheduler & $SCHEDULER_PID
 
 echo "starting airflow webserver ..."
-airflow webserver
+airflow webserver & $WEBSERVER_PID
 
 wait $SCHEDULER_PID
 
