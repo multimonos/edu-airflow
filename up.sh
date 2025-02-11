@@ -2,6 +2,6 @@
 
 pgrep nginx && valet stop
 
-pgrep java && brew services stop zookeeper 
+pgrep java && brew services stop zookeeper  && brew services stop kafka
 
 docker compose up 
