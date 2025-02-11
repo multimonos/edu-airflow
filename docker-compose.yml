@@ -1,0 +1,16 @@
+# debian
+services:
+  airflow:
+    build: .
+    container_name: airflow_dev
+    restart: always
+    #tty: true # keep container running
+    #stdin_open: true # enable interactive shell 
+    environment:
+      - AIRFLOW__CORE__LOAD_EXAMPLES=False
+      - AIRFLOW__CORE__EXECUTOR=SequentialExecutor
+      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=sqlite:////opt/airflow/airflow.db
+    volumes:
+      - ./dags:/opt/airflow/dags
+    ports:
+      - "8080:8080"
