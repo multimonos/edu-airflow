@@ -15,8 +15,8 @@ default_args = {
 
 with DAG(
     default_args=default_args,
-    dag_id="python_op_parameterized",
-    description="python operator fn with params",
+    dag_id="python_op_params",
+    description="python task with params",
     start_date=datetime(2025, 2, 11),
     schedule_interval="@daily",
 ) as dag:

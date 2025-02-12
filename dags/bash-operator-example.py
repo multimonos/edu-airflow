@@ -9,9 +9,9 @@ default_args = {
 }
 
 with DAG(
-    dag_id="bash_op_example",
+    dag_id="bash_op",
     default_args=default_args,
-    description="This is my first dag",
+    description="bash tasks example",
     start_date=datetime(2025, 2, 11, 9),
     schedule_interval="@daily",
 ) as dag:

@@ -15,8 +15,8 @@ default_args = {
 
 with DAG(
     default_args=default_args,
-    dag_id="python_op_example",
-    description="hello world with python operator",
+    dag_id="python_op_hello_world",
+    description="python hello world",
     start_date=datetime(2025, 2, 11),
     schedule_interval="@daily",
 ) as dag:
