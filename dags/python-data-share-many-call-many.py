@@ -36,4 +36,4 @@ with DAG(
 
     task2 = PythonOperator(task_id="get_name", python_callable=get_name)
 
-    task2 >> task1
+    task2 >> task1  # pyright: ignore[reportUnusedExpression]
