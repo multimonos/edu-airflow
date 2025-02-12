@@ -5,18 +5,18 @@ FROM apache/airflow:2.7.2-python3.10
 USER root
 
 RUN apt-get update \
-    && apt-get install -y tree procps \
+    && apt-get install -y tree procps vim \
     && rm -rf /var/lib/apt/lists/*
 
-RUN pip install --upgrade pip
 
 # --- airflow:airflow ---
 USER airflow
 
+
 ENV AIRFLOW_HOME=/home/airflow
 WORKDIR $AIRFLOW_HOME
 
-RUN pip install --no-cache-dir apache-airflow-providers-sqlite
+RUN pip install --upgrade pip && pip install --no-cache-dir apache-airflow-providers-sqlite
 
 COPY ./docker/profile /home/airflow/.bash_profile
 

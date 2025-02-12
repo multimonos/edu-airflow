@@ -2,8 +2,7 @@ if [ -f /etc/profile.d/bash_completion.sh ]; then
     . /etc/profile.d/bash_completion.sh
 fi
 
+export PATH=$PATH:/home/airflow/.local/bin
+
 # aliases
 alias ll='ls -al'
-
-# starship
-# eval "$(starship init bash)"
