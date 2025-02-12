@@ -8,6 +8,7 @@ RUN apt-get update \
     && apt-get install -y tree procps \
     && rm -rf /var/lib/apt/lists/*
 
+RUN pip install --upgrade pip
 
 # --- airflow:airflow ---
 USER airflow
