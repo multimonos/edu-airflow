@@ -19,7 +19,7 @@ def fetch_data() -> None:
         print(row)
 
     cursor.close()  # type: ignore
-    conn.close()
+    conn.close()  # type: ignore
 
 
 def show_airflow_vars(dag: DAG, ti: TaskInstance) -> None:
@@ -47,7 +47,7 @@ with DAG(
     )
     task3 = BashOperator(
         task_id="tpl_vars_example",
-        bash_command="echo 'template vars dump: date={{ds}} id={{dag.dag_id}}'",
+        bash_command="echo 'template vars dump: date={{ds}}, id={{dag.dag_id}}'",
     )
 
     [task2, task3] >> task1
