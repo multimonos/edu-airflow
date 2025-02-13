@@ -16,7 +16,9 @@ USER airflow
 ENV AIRFLOW_HOME=/home/airflow
 WORKDIR $AIRFLOW_HOME
 
-RUN pip install --upgrade pip && pip install --no-cache-dir apache-airflow-providers-sqlite
+RUN pip install --upgrade pip \
+    && pip install --no-cache-dir apache-airflow-providers-sqlite  apache-airflow-providers-mysql 
+
 
 COPY ./docker/profile /home/airflow/.bash_profile
 
