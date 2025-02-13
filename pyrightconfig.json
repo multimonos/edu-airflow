@@ -1,5 +1,6 @@
 {
   "venvPath": "/Users/chopgood/src/data-engineer/edu-airflow",
-  "venv": ".venv"
+  "venv": ".venv",
+  "reportMissingTypeStubs": false
 }
 

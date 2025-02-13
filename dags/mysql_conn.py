@@ -4,9 +4,9 @@ from datetime import datetime, timedelta
 from airflow import DAG
 
 
-def fetch_data():
-    mysql_hook = MySqlHook(mysql_conn_id="devmysql")
-    conn = mysql_hook.get_conn()
+def fetch_data() -> None:
+    hook: MySqlHook = MySqlHook(mysql_conn_id="devmysql")
+    conn = hook.get_conn()
     cursor = conn.cursor()
     cursor.execute("select * from test limit 10;")
     rows = cursor.fetchall()
