@@ -6,3 +6,4 @@ export PATH=$PATH:/home/airflow/.local/bin
 
 # aliases
 alias ll='ls -al'
+alias af='airflow'
