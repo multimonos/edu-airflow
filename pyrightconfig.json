@@ -1,6 +1,10 @@
 {
   "venvPath": "/Users/chopgood/src/data-engineer/edu-airflow",
   "venv": ".venv",
-  "reportMissingTypeStubs": false
+  "typeCheckingMode":"off",
+  "ignore": [
+    "dags/mysql*.py"
+  ],
+  "reportMissingTypeStubs": false,
 }
 
