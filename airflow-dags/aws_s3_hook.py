@@ -1,9 +1,12 @@
 from datetime import datetime, timedelta
 import csv
+import logging
+from airflow.models.taskinstance import TaskInstance
 from airflow.operators.python import PythonOperator
 from airflow import DAG
 from airflow.providers.postgres.operators.postgres import PostgresOperator
 from airflow.providers.postgres.hooks.postgres import PostgresHook
+import pendulum
 
 postgres_conn_id = "devpostgres"
 
@@ -20,20 +23,37 @@ def show_orders() -> None:
     conn.close()
 
 
-def write_orders_csv() -> None:
+def write_orders_csv(
+    data_interval_end: pendulum.DateTime,
+    data_interval_start: pendulum.DateTime,
+) -> None:
+    """write only order data within a specific run interval"""
+
+    left = data_interval_start.format("YYYYMMDD")
+    right = data_interval_end.format("YYYYMMDD")
+
+    print(f"**** start: {left} ****")
+    print(f"**** finish: {right} ****")
+    print(f"**** select * from orders where date >= {left} and date < {right};")
+
     # get data
     hook = PostgresHook(postgres_conn_id=postgres_conn_id)
     conn = hook.get_conn()
     cursor = conn.cursor()
-    cursor.execute("select * from orders limit 10;")
+    cursor.execute(
+        "select * from orders where date >= %s and date < %s;",
+        (left, right),
+    )
 
     # write
-    ofile = "/home/airflow/dags/orders_.csv"
+    ofile = f"/home/airflow/tmp/orders-{left}.csv"
     with open(ofile, "w+") as fp:
         writer = csv.writer(fp)
         print(f"cursor.description: {cursor.description}")
         writer.writerow([i[0] for i in cursor.description])
         writer.writerows(cursor)
+
+    logging.info(f"orders : Wrote file {ofile}")
     cursor.close()
     conn.close()
 
@@ -48,8 +68,9 @@ default_args = {
 with DAG(
     dag_id="aws_s3_hook",
     default_args=default_args,
-    start_date=datetime(2025, 2, 17),
+    start_date=datetime(2024, 1, 1),
     schedule_interval="@daily",
+    catchup=True,
 ) as dag:
     """
     Preconditions,
@@ -60,6 +81,12 @@ with DAG(
     - collect order data
     - write order data to file
     - upload file to s3 like bucket
+
+    This example could be run via backfill as the order dates are historical, so, something like
+    the following command would be effective in generating past csv files
+
+    airflow dags backfill -s 2022-05-01 -e 2022-05-30 aws_s3_hook
+
     """
     maybe_create_table = PostgresOperator(
         task_id="maybe_create_table",
