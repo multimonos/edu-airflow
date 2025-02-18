@@ -1,5 +1,4 @@
 from datetime import timedelta, datetime
-from socket import timeout
 from airflow import DAG
 from airflow.providers.amazon.aws.sensors.s3 import S3KeySensor
 
@@ -10,7 +9,7 @@ default_args = {
 }
 
 with DAG(
-    dag_id="minio_aws_sensor",
+    dag_id="aws_s3_sensor",
     default_args=default_args,
     start_date=datetime(2025, 2, 17),
     schedule_interval="@daily",
