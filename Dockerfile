@@ -5,7 +5,7 @@ FROM apache/airflow:2.7.2-python3.10
 USER root
 
 RUN apt-get update \
-    && apt-get install -y tree procps vim \
+    && apt-get install -y tree procps vim wget \
     && rm -rf /var/lib/apt/lists/*
 
 
@@ -17,11 +17,17 @@ ENV AIRFLOW_HOME=/home/airflow
 WORKDIR $AIRFLOW_HOME
 
 RUN pip install --upgrade pip \
-    && pip install --no-cache-dir apache-airflow-providers-sqlite  apache-airflow-providers-mysql 
+    && pip install --no-cache-dir \
+    apache-airflow-providers-sqlite  \
+    apache-airflow-providers-amazon \
+    apache-airflow-providers-mysql 
 
 
+
+# --- user profile ---
 COPY ./docker/profile /home/airflow/.bash_profile
 
+# --- entrypoint ---
 COPY --chown=airflow:airflow ./docker/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
