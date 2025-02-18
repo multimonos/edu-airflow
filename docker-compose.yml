@@ -1,4 +1,5 @@
 networks:
+  # connects airflow -> minio
   my_bridge:
     driver: bridge
 
@@ -15,8 +16,8 @@ services:
       - AIRFLOW__CORE__EXECUTOR=SequentialExecutor
       - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=sqlite:////home/airflow/airflow.db
     volumes:
-      - ./dags:/home/airflow/dags
-      - ./src:/home/airflow/src
+      - ./airflow-dags:/home/airflow/dags
+      - ./airflow-tmp:/home/airflow/tmp
     ports:
       - "8080:8080"
     networks:
@@ -71,5 +72,9 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./pgdata:/var/lib/postgresql/data
-
+      - ./postgres-data:/var/lib/postgresql/data
+      - ./postgres-src:/src
+    # entrypoint: >
+    #   /bin/sh -c "
+    #   alias ll='ls -al';
+    #   "
