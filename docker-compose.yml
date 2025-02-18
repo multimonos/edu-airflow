@@ -33,13 +33,20 @@ services:
 
   minio-client:
     image: minio/mc
+    container_name: minio-client
     depends_on:
       - minio
+    volumes:
+      - ./minio-client:/data
     entrypoint: >
       /bin/sh -c "
-      sleep 5;
-      mc alias set local http://minio:9000 minioadmin minioadmin; # config minio client
-      mc mb local/airflow-dev; # minio make bucket
-      mc policy set public local/airflow-dev; # minio grant access
-      exit 0; # minio client should only run once then exit
+      echo 'minio-client : setup';
+      ls -al /data;
+      sleep 15;
+      mc alias set local http://minio:9000 minioadmin minioadmin;
+      mc mb local/airflow-dev;
+      mc policy set public local/airflow-dev;
+      mc cp /data/data.csv local/airflow-dev;
+      mc ls local/airflow-dev;
+      while true; do sleep 3600; done;
       "

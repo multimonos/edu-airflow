@@ -3,7 +3,7 @@
 echo "initializing airflow db ..."
 airflow db init
 
-echo "creating airflow user ..."
+echo "airflow : creating user 'airflow' ..."
 airflow users create \
     --username admin \
     --password pwd \
@@ -12,13 +12,13 @@ airflow users create \
     --role Admin \
     --email searaig@gmail.com
 
-echo "starting airflow scheduler ..."
+echo "airflow : starting scheduler ..."
 airflow scheduler & $SCHEDULER_PID
 
-echo "starting airflow webserver ..."
+echo "airflow : starting webserver ..."
 airflow webserver & $WEBSERVER_PID
 
-echo "creating mysql connector 'dev_mysql' ..."
+echo "airflow : creating mysql connection 'devmysql' ..."
  airflow connections add 'devmysql' \
      --conn-type 'mysql' \
      --conn-host 'host.docker.internal' \
@@ -27,7 +27,12 @@ echo "creating mysql connector 'dev_mysql' ..."
      --conn-schema 'devmysql' \
      --conn-port '3306'
 
-
+echo "minio : creating airflow connection devminio ..." 
+ airflow connections add 'devminio' \
+     --conn-type 'aws' \
+     --conn-login 'minioadmin' \
+     --conn-password 'minioadmin' \
+     --conn-extra '{ "endpoint_url":"http://host.docker.internal:9000" }'
 
 echo "wait wait ..."
 wait $SCHEDULER_PID
