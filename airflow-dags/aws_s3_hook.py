@@ -1,12 +1,13 @@
 from datetime import datetime, timedelta
 import csv
 import logging
-from airflow.models.taskinstance import TaskInstance
 from airflow.operators.python import PythonOperator
 from airflow import DAG
 from airflow.providers.postgres.operators.postgres import PostgresOperator
 from airflow.providers.postgres.hooks.postgres import PostgresHook
 import pendulum
+from airflow.providers.amazon.aws.hooks.s3 import S3Hook
+from os.path import basename
 
 postgres_conn_id = "devpostgres"
 
@@ -23,7 +24,7 @@ def show_orders() -> None:
     conn.close()
 
 
-def write_orders_csv(
+def write_then_upload_orders_csv(
     data_interval_end: pendulum.DateTime,
     data_interval_start: pendulum.DateTime,
 ) -> None:
@@ -45,7 +46,7 @@ def write_orders_csv(
         (left, right),
     )
 
-    # write
+    # write file
     ofile = f"/home/airflow/tmp/orders-{left}.csv"
     with open(ofile, "w+") as fp:
         writer = csv.writer(fp)
@@ -56,6 +57,11 @@ def write_orders_csv(
     logging.info(f"orders : Wrote file {ofile}")
     cursor.close()
     conn.close()
+
+    # upload file
+    s3hook = S3Hook(aws_conn_id="devminio")
+    s3key = basename(ofile)
+    s3hook.load_file(filename=ofile, key=s3key, bucket_name="airflow-dev", replace=True)
 
 
 # dag
@@ -106,9 +112,11 @@ with DAG(
         task_id="show_orders", python_callable=show_orders
     )
 
-    write_orders_csv_task = PythonOperator(
-        task_id="write_orders_csv", python_callable=write_orders_csv
+    update_orders_csv_task = PythonOperator(
+        task_id="write_then_upload_orders_csv",
+        python_callable=write_then_upload_orders_csv,
     )
 
     # dag setup
-    (maybe_create_table >> show_orders_task >> write_orders_csv_task)
+    # todo could use python lib `tempfile` to write tmp instead persisting the tmp/orders*.csv files
+    (maybe_create_table >> show_orders_task >> update_orders_csv_task)
