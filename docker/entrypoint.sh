@@ -27,6 +27,15 @@ airflow connections add 'devmysql' \
      --conn-schema 'devmysql' \
      --conn-port '3306'
 
+echo "airflow : creating postgres connection 'devpostgres' ..."
+airflow connections add 'devpostgres' \
+     --conn-type 'postgres' \
+     --conn-host 'host.docker.internal' \
+     --conn-login 'pgadmin' \
+     --conn-password 'pgadmin' \
+     --conn-schema 'airflow' \
+     --conn-port '5432'
+
 echo "minio : checking bridge ..."
 ping -c 1 minio
 curl -I http://minio:9000/minio/health/live

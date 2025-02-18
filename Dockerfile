@@ -22,6 +22,7 @@ RUN pip install --upgrade pip \
     && pip install --no-cache-dir \
     apache-airflow-providers-sqlite  \
     apache-airflow-providers-amazon \
+    apache-airflow-providers-postgres \
     apache-airflow-providers-mysql 
 
 
