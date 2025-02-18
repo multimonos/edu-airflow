@@ -19,7 +19,7 @@ echo "airflow : starting webserver ..."
 airflow webserver & $WEBSERVER_PID
 
 echo "airflow : creating mysql connection 'devmysql' ..."
- airflow connections add 'devmysql' \
+airflow connections add 'devmysql' \
      --conn-type 'mysql' \
      --conn-host 'host.docker.internal' \
      --conn-login 'devmysql' \
@@ -27,13 +27,17 @@ echo "airflow : creating mysql connection 'devmysql' ..."
      --conn-schema 'devmysql' \
      --conn-port '3306'
 
+echo "minio : checking bridge ..."
+ping -c 1 minio
+curl -I http://minio:9000/minio/health/live
+
 echo "minio : creating airflow connection devminio ..." 
- airflow connections add 'devminio' \
+airflow connections add 'devminio' \
      --conn-type 'aws' \
      --conn-login 'minioadmin' \
      --conn-password 'minioadmin' \
-     --conn-extra '{ "endpoint_url":"http://host.docker.internal:9000" }'
+     --conn-extra '{ "endpoint_url":"http://minio:9000" }'
 
-echo "wait wait ..."
+echo "airflow : container keep alive wait wait ..."
 wait $SCHEDULER_PID
 
