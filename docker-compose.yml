@@ -15,6 +15,11 @@ services:
       - AIRFLOW__CORE__LOAD_EXAMPLES=False
       - AIRFLOW__CORE__EXECUTOR=SequentialExecutor
       - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=sqlite:////home/airflow/airflow.db
+      - AIRFLOW__SMTP__SMTP_HOST=host.docker.internal
+      - AIRFLOW__SMTP__SMTP_SSL=False
+      - AIRFLOW__SMTP__SMTP_STARTTLS=False
+      - AIRFLOW__SMTP__SMTP_MAIL_FROM=no-reply@example.com
+      - AIRFLOW__SMTP__SMTP_PORT=1025
     volumes:
       - ./airflow-dags:/home/airflow/dags
       - ./airflow-tmp:/home/airflow/tmp
