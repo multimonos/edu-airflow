@@ -13,8 +13,8 @@ with DAG(
     schedule_interval=None,
 ) as dag:
     task = EmailOperator(
-        task_id="sendmail",
-        to="test@example.com",
+        task_id="send",
+        to="email-test-dag@example.com",
         subject="Airflow test send mail",
         html_content="<p>this is a test</p>",
     )
